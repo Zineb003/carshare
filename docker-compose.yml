@@ -1,10 +1,12 @@
 services:
+
   tomcat:
     image: tomcat
-    container_name: tomcat-app
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./app/target/carshare.war:/usr/local/tomcat/webapps/carshare.war
     ports:
       - "8090:8080"
     restart: unless-stopped
