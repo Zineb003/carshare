@@ -1,0 +1,34 @@
+services:
+  tomcat:
+    image: tomcat:11.0
+    container_name: tomcat-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target/carshare.war:/usr/local/tomcat/webapps/carshare.war
+      - ./lib/mysql-connector-j.jar:/usr/local/tomcat/lib/mysql-connector-j.jar
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=carshare
+      - MYSQL_USER=tomcat
+      - MYSQL_PASSWORD=tomcat
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mysql
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE=carshare
+      MYSQL_USER=tomcat
+      MYSQL_PASSWORD=tomcat
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
