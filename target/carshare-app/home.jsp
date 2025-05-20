@@ -13,8 +13,7 @@
 
     <div class="container">
         <div class="p-5 text-center bg-white rounded-3 shadow mt-5">
-            <h1 class="fs-3 fw-bold">Bienvenue sur notre application Jakarta App</h1>
-            <p class="fs-5">Un projet Java Jakarta EE avec JSP moderne et élégant.</p>
+            <h1 class="fs-3 fw-bold">Bienvenue sur notre application Carshare !</h1>
         </div>
     </div>
     
