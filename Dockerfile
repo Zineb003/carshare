@@ -3,6 +3,12 @@ FROM tomcat
 # Initialisation de tomcat
 RUN cp -R webapps.dist/* webapps/
 
+# Copie du driver JDBC
+COPY conf/mysql-connector-j-9.3.0.jar /usr/local/tomcat/lib/
+
+# Copie du fichier context.xml pour activer le JNDI
+COPY conf/context.xml /usr/local/tomcat/conf/context.xml
+
 # Ajout d'un utilisateur admin pour accéder au manager app
 RUN echo '\
 <tomcat-users>\n\
