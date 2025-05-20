@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./app/target/carshare.war:/usr/local/tomcat/webapps/carshare.war
+      - ./target/carshare-app:/usr/local/tomcat/webapps/carshare-app/
     ports:
       - "8090:8080"
     restart: unless-stopped
