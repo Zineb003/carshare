@@ -22,7 +22,6 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // Validation basique
         if (username == null || email == null || password == null ||
             username.isEmpty() || email.isEmpty() || password.isEmpty()) {
 

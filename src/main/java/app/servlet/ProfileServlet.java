@@ -1,18 +1,20 @@
-package servlet;
+package app.servlet;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
-import utils.DatabaseUtil;
+import app.util.DBUtil;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 import java.sql.*;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 
 @WebServlet(urlPatterns = {"/profile"})
 @MultipartConfig(maxFileSize = 1024 * 1024 * 2)
@@ -28,7 +30,7 @@ public class ProfileServlet extends HttpServlet {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("run-profile.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -43,9 +45,9 @@ public class ProfileServlet extends HttpServlet {
 
         int userId = (int) session.getAttribute("user.id");
 
-        String username = request.getParameter("user.username");
-        String email = request.getParameter("user.email");
-        String password = request.getParameter("user.password");
+        String username = (String) request.getAttribute("user.username");
+        String email = (String) request.getAttribute("user.email");
+        String password = (String) request.getAttribute("user.password");
 
         Part avatarPart = request.getPart("user.avatar");
 
@@ -75,24 +77,12 @@ public class ProfileServlet extends HttpServlet {
             try (InputStream input = avatarPart.getInputStream()) {
                 Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                e.printStackTrace();
                 request.setAttribute("error", "Erreur lors de l'upload de l'avatar.");
-                forwardWithUserData();
+                doGet(request, response);
                 return;
             }
         }
 
-        forwardWithUserData();
-    }
-
-    // Modif version correcte
-    private void forwardWithUserData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-
-        request.setAttribute("username", session.getAttribute("username"));
-        request.setAttribute("email", session.getAttribute("email"));
-        request.setAttribute("avatarUrl", session.getAttribute("avatarUrl"));
-
-        request.getRequestDispatcher("run-profile.jsp").forward(request, response);
+        doGet(request, response);
     }
 }

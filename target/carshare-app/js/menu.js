@@ -1,6 +1,9 @@
-const btn = document.getElementById('mobile-menu-button');
-const menu = document.getElementById('mobile-menu');
+$(document).ready(function () {
 
-btn.addEventListener('click', () => {
-menu.classList.toggle('hidden');
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+    });
 });

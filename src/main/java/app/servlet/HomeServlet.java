@@ -1,7 +1,14 @@
 package app.servlet;
 
+import app.util.DBUtil;
+
+import java.util.List;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,7 +21,21 @@ public class HomeServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        List<String> startTowns = new ArrayList<>();
+
+        try (Connection conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT DISTINCT start_town FROM trips");
+            ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                startTowns.add(rs.getString("start_town"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     
+        request.setAttribute("startTowns", startTowns);
         RequestDispatcher dispatcher = request.getRequestDispatcher("run-home.jsp");
         dispatcher.forward(request, response);
     }

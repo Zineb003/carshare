@@ -56,6 +56,7 @@ public class LoginServlet extends HttpServlet {
                         rs.getString("username"),
                         rs.getString("email"),
                         rs.getString("password"),
+                        rs.getString("avatar_url"),
                         rs.getTimestamp("created_at")
                     );
 

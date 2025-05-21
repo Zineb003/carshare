@@ -7,15 +7,17 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private String avatar;
     private Timestamp createdAt;
 
     public User() {}
 
-    public User(int id, String username, String email, String password, Timestamp createdAt) {
+    public User(int id, String username, String email, String password, String avatar, Timestamp createdAt) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.avatar = avatar;
         this.createdAt = createdAt;
     }
 
@@ -49,6 +51,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public Timestamp getCreatedAt() {
