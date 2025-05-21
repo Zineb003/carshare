@@ -1,6 +1,7 @@
 package app.servlet;
 
 import app.util.DBUtil;
+import app.model.User;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,31 +16,59 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;   
+
 @WebServlet(urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
 
+         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            request.setAttribute("error", "Tous les champs sont obligatoires.");
+            request.getRequestDispatcher("run-login.jsp").forward(request, response);
+            return;
+        }
+
         try {
+            Argon2 argon2 = Argon2Factory.create();
+
             Connection conn = DBUtil.getConnection();
 
-            String sql = "SELECT * FROM users WHERE BINARY username = ? AND BINARY password = ?";
+            String sql = "SELECT * FROM users WHERE BINARY email = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, password);
+            stmt.setString(1, email);
 
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                HttpSession session = request.getSession();
-                session.setAttribute("user", username);
+                String hashedPassword = rs.getString("password");
+            
+                if (argon2.verify(hashedPassword, password)) {
 
-                response.sendRedirect(request.getContextPath() + "/profile");
+                    HttpSession session = request.getSession();
+                    User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getTimestamp("created_at")
+                    );
+
+                    session.setAttribute("user", user);
+
+                    response.sendRedirect(request.getContextPath() + "/profile");
+                } else {
+                    request.setAttribute("error", "Adresse e-mail ou mot de passe incorrect.");
+                    request.getRequestDispatcher("run-login.jsp").forward(request, response);
+                }
             } else {
-                request.setAttribute("error", "Nom d'utilisateur ou mot de passe incorrect.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                request.setAttribute("error", "Il existe déjà un compte avec cette adresse e-mail.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
                 dispatcher.forward(request, response);
             }
 
@@ -48,12 +77,13 @@ public class LoginServlet extends HttpServlet {
             conn.close();
 
         } catch (Exception e) {
-            request.setAttribute("error", "Erreur interne : " + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+            request.setAttribute("error", "Erreur serveur : " + e.getMessage());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
             dispatcher.forward(request, response);
         }
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
@@ -64,7 +94,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
         dispatcher.forward(request, response);
     }
 }

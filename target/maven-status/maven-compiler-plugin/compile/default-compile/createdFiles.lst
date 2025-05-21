@@ -1,7 +1,9 @@
 app/servlet/LogoutServlet.class
 app/util/DBUtil.class
+app/servlet/RegisterServlet.class
 app/servlet/HomeServlet.class
 app/model/User.class
 app/servlet/LoginServlet.class
+app/model/Trip.class
 app/servlet/ProfileServlet.class
 app/dao/UserDAO.class

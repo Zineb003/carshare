@@ -20,29 +20,4 @@ public class UserDAO {
             e.printStackTrace();
         }
     }
-
-    public List<User> getUsers() {
-        List<User> liste = new ArrayList<>();
-        String sql = "SELECT * FROM users ORDER BY created_at DESC";
-
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                User u = new User();
-                u.setId(rs.getInt("id"));
-                u.setNom(rs.getString("username"));
-                u.setEmail(rs.getString("email"));
-                u.setMotDePasse(rs.getString("password"));
-                u.setDateCreation(rs.getTimestamp("created_at"));
-                liste.add(u);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return liste;
-    }
 }

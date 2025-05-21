@@ -1,24 +1,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Carshare - Accueil</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <%@ include file="menu.jsp" %>
 
-    <div class="container">
-        <div class="p-5 text-center bg-white rounded-3 shadow mt-5">
-            <h1 class="fs-3 fw-bold">Bienvenue sur notre application Carshare !</h1>
-        </div>
+<section class="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-blue-100 to-white">
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-blue-700 mb-4">Bienvenue sur Carshare !</h1>
+        <p class="text-lg text-gray-600">Trouvez ou proposez un trajet simplement.</p>
     </div>
-    
-    <%@ include file="footer.jsp" %>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <form action="search.jsp" method="get" class="bg-white p-6 rounded-2xl shadow-lg w-fit max-w-2xl space-y-4">
+        <div class="grid md:grid-cols-3 gap-4">
+            <input type="text" name="depart" placeholder="Départ" required
+                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+            <input type="text" name="destination" placeholder="Destination" required
+                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+            <input type="datetime-local" name="date" required
+                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="flex justify-center">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer">
+                Rechercher un trajet
+            </button>
+        </div>
+    </form>
+    <div class="mt-12 text-center">
+        <a href="create-trip.jsp"
+           class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold shadow-md">
+            Proposer un trajet
+        </a>
+    </div>
+</section>

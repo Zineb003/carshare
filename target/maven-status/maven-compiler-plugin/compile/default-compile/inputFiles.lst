@@ -1,4 +1,6 @@
+/home/urca/carshare/src/main/java/app/servlet/RegisterServlet.java
 /home/urca/carshare/src/main/java/app/servlet/LogoutServlet.java
+/home/urca/carshare/src/main/java/app/model/Trip.java
 /home/urca/carshare/src/main/java/app/model/User.java
 /home/urca/carshare/src/main/java/app/dao/UserDAO.java
 /home/urca/carshare/src/main/java/app/servlet/ProfileServlet.java
