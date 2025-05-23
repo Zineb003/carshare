@@ -60,6 +60,11 @@ public class SearchServlet extends jakarta.servlet.http.HttpServlet {
                     trajet.setPrice(rs.getBigDecimal("price"));
                     trajet.setDescription(rs.getString("description"));
                     trajet.setCreatedAt(rs.getTimestamp("createdAt"));
+                    trajet.setStatut(rs.getString("statut"));
+                    trajet.setTypeVehicule(rs.getString("typeVehicule"));
+                    trajet.setUsername(rs.getString("username"));
+                    trajet.setAvatar_url(rs.getString("avatar_url"));
+
 
                     trajets.add(trajet);
                 }

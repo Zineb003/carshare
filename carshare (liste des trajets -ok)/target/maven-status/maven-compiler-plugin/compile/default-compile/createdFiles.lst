@@ -2,9 +2,9 @@ app/model/Trajet.class
 app/servlet/LogoutServlet.class
 app/servlet/SearchServlet.class
 app/servlet/RegisterServlet.class
+app/servlet/CreateTripServlet.class
 app/model/User.class
 app/servlet/LoginServlet.class
-app/servlet/TestServlet.class
 app/model/Trip.class
 app/model/Profil.class
 app/util/DBUtil.class

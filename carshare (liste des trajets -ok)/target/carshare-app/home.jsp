@@ -34,7 +34,7 @@
         </div>
     </form>
     <div class="mt-12 text-center">
-        <a href="create-trip.jsp"
+        <a href="createTrip"
            class="inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-semibold shadow-md">
             Proposer un trajet
         </a>

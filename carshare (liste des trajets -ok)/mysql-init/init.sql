@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS trajets (
     endTown VARCHAR(100) NOT NULL,
     startAddress VARCHAR(255),
     endAddress VARCHAR(255),
-    startDate DATE NOT NULL,
+    startDate DATETIME NOT NULL,
     price DECIMAL(6,2) NOT NULL,                                             
     description TEXT,    
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                      
@@ -56,13 +56,19 @@ CREATE TABLE IF NOT EXISTS trajets (
 
 INSERT INTO users (username, email, password) VALUES
 ('alice', 'alice@example.com', '$argon2i$v=19$m=65536,t=4,p=1$kl4mG0NIEyx0xJ0XjEnYWQ$jaE4X6av6OhLfYC+tWOyrs+Z/Ab6hqm5TOE6KMS2/9Q'),
-('bob', 'bob@example.com', '$argon2i$v=19$m=65536,t=4,p=1$kl4mG0NIEyx0xJ0XjEnYWQ$jaE4X6av6OhLfYC+tWOyrs+Z/Ab6hqm5TOE6KMS2/9Q');
+('bob', 'bob@example.com', '$argon2i$v=19$m=65536,t=4,p=1$kl4mG0NIEyx0xJ0XjEnYWQ$jaE4X6av6OhLfYC+tWOyrs+Z/Ab6hqm5TOE6KMS2/9Q'),
+('princesse caroline', 'pcaroline@example.com', '$argon2i$v=19$m=65536,t=4,p=1$kl4mG0NIEyx0xJ0XprincessecarolinehLfYC+tWOyrs+Z/Ab6hqm5TOE6KMS2/9Q'),
+('patrick fiori', 'pfiori@example.com', '$argon2i$v=19$m=65536,t=4,p=1$kl4mG0NIEyx0xJ0XpatrickfioriYC+tWOyrs+Z/Ab6hqm5TOE6KMS2/9Q');
 
 INSERT INTO profil (id, statut, typeVehicule, nbPassagersMax) VALUES
 (1, 'conducteur', 'Citroen C3', 3),
-(2, 'passager', NULL, NULL);
+(2, 'passager', NULL, NULL),
+(3, 'conducteur', 'Lamborghini SPYDER', 1),
+(4, 'conducteur', 'tracteur', 2);
 
 INSERT INTO trajets (profilId, startTown, endTown, startAddress,endAddress,startDate,price,description) VALUES
-(1, 'Antibes', 'Reims', 'Gare de Antibes','Gare de Reims','2025-06-21',60.00,'Bonjour, je pars rejoindre ma famille a Reims et mon chat sera du voyage haha!');
+(1, 'Antibes', 'Reims', 'Gare de Antibes','Gare de Reims','2025-06-21 08:00:00',60.00,'Bonjour, je pars rejoindre ma famille a Reims et mon chat sera du voyage haha!'),
+(3, 'Antibes', 'Reims', 'Sophia Antipolis','Fac de Reims','2025-06-21 16:32:00',300.00,'Hello, vehicule non fumeur merci'),
+(4, 'Antibes', 'Reims', 'Plage','Coccimarket pres de la fac de science','2025-06-21 14:07:00',20.00,'Que tu revieeeeeeennes !!!');
 
 
