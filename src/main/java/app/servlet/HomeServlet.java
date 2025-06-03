@@ -22,20 +22,20 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        List<String> startTowns = new ArrayList<>();
+        List<String> startTown = new ArrayList<>();
 
         try (Connection conn = DBUtil.getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT DISTINCT start_town FROM trips");
+            PreparedStatement stmt = conn.prepareStatement("SELECT DISTINCT startTown FROM trajets");
             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                startTowns.add(rs.getString("start_town"));
+                startTown.add(rs.getString("startTown"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     
-        request.setAttribute("startTowns", startTowns);
+        request.setAttribute("startTown", startTown);
         RequestDispatcher dispatcher = request.getRequestDispatcher("run-home.jsp");
         dispatcher.forward(request, response);
     }

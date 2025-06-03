@@ -1,9 +1,15 @@
-/home/urca/carshare/src/main/java/app/servlet/RegisterServlet.java
-/home/urca/carshare/src/main/java/app/servlet/LogoutServlet.java
-/home/urca/carshare/src/main/java/app/model/Trip.java
-/home/urca/carshare/src/main/java/app/model/User.java
-/home/urca/carshare/src/main/java/app/dao/UserDAO.java
-/home/urca/carshare/src/main/java/app/servlet/ProfileServlet.java
-/home/urca/carshare/src/main/java/app/servlet/HomeServlet.java
-/home/urca/carshare/src/main/java/app/servlet/LoginServlet.java
-/home/urca/carshare/src/main/java/app/util/DBUtil.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/model/Profil.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/LoginServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/RegisterServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/MyTripsServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/model/Trajet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/CreateProfilServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/util/DBUtil.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/dao/UserDAO.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/CreateTripServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/model/User.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/ProfileServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/model/Trip.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/SearchServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/HomeServlet.java
+/home/kali/Documents/809/carshare (recherche+insertion) (copy 2)/src/main/java/app/servlet/LogoutServlet.java

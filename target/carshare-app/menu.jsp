@@ -13,14 +13,13 @@
       <%-- User menu --%>
       <div class="flex items-center space-x-4">
           <a href="${pageContext.request.contextPath}/" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Accueil</a>
-          <a href="${pageContext.request.contextPath}/search" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Rechercher</a>
         <%
            if (session.getAttribute("user") != null) { 
               User user = (User) session.getAttribute("user");
               String avatar = (String) user.getAvatar();
         %>
-          <a href="${pageContext.request.contextPath}/create-trip" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Proposer un trajet</a>
-          <a href="${pageContext.request.contextPath}/user-trips" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Mes trajets</a>
+          <a href="${pageContext.request.contextPath}/createProfil" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Proposer un trajet</a>
+          <a href="${pageContext.request.contextPath}/myTrips" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Mes trajets</a>
           <div class="relative group hidden md:block">
             <img src="<%= avatar %>" alt="avatar" class="w-10 h-10 rounded-full cursor-pointer transition"/>
 
@@ -58,14 +57,13 @@
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
     <a href="${pageContext.request.contextPath}/" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Accueil</a>
-    <a href="search.jsp" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Rechercher</a>
     <% 
         if (session.getAttribute("user") != null) { 
             User user = (User) session.getAttribute("user");
             String avatar = (String) user.getAvatar();
     %>
-      <a href="create-trip.jsp" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Proposer un trajet</a>
-      <a href="my-trips.jsp" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Mes trajets</a>
+      <a href="createProfil.jsp" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Proposer un trajet</a>
+      <a href="myTrips.jsp" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Mes trajets</a>
       <a href="profile.jsp" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-medium">Profil</a>
       <form action="${pageContext.request.contextPath}/logout" method="post" class="block px-4 py-3 hover:bg-red-50">
         <button type="submit" class="w-full text-left text-red-600 hover:text-red-700 font-semibold cursor-pointer">
