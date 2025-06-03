@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    private static final String DB_URL = "jdbc:mysql://mysql:3306/carshare?useSSL=false&serverTimezone=UTC";
+    private static final String DB_URL = "jdbc:mysql://10.11.31.193:3310/carshare";
     private static final String DB_USER = "tomcat";
     private static final String DB_PASSWORD = "tomcat";
 

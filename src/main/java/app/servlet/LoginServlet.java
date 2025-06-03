@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("avatar_url"),
-                        rs.getTimestamp("createdAt")
+                        rs.getTimestamp("created_at")
                     );
 
                     session.setAttribute("user", user);
@@ -65,11 +65,11 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/profile");
                 } else {
                     request.setAttribute("error", "Adresse e-mail ou mot de passe incorrect.");
-                    request.getRequestDispatcher("run-login.jsp").forward(request, response);
+                    request.getRequestDispatcher("/run/run-login.jsp").forward(request, response);
                 }
             } else {
                 request.setAttribute("error", "Il existe déjà un compte avec cette adresse e-mail.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
                 dispatcher.forward(request, response);
             }
 
@@ -79,7 +79,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (Exception e) {
             request.setAttribute("error", "Erreur serveur : " + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
             dispatcher.forward(request, response);
         }
     }
@@ -95,7 +95,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
         dispatcher.forward(request, response);
     }
 }

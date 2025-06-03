@@ -1,0 +1,14 @@
+<%@ page import="java.util.List, java.util.ArrayList" %>
+
+<%
+    request.setAttribute("title", "Carshare - Accueil");
+    request.setAttribute("content", "/views/home.jsp");
+
+    List<String> scripts = new ArrayList<>();
+    scripts.add("/js/menu.js");
+    scripts.add("/js/villes.js");
+
+    request.setAttribute("customScripts", scripts);
+%>
+
+<jsp:include page="/layout.jsp" />

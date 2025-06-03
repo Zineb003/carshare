@@ -12,7 +12,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import app.model.User;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
@@ -26,10 +25,11 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null ) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("run-profile.jsp");
         dispatcher.forward(request, response);
     }
@@ -38,14 +38,12 @@ public class ProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        User user = (User) session.getAttribute("user");
-        int userId = user.getId();
-
+        int userId = (int) session.getAttribute("user.id");
 
         String username = (String) request.getAttribute("user.username");
         String email = (String) request.getAttribute("user.email");
@@ -75,7 +73,6 @@ public class ProfileServlet extends HttpServlet {
             if (!uploadDir.exists()) uploadDir.mkdirs();
 
             File file = new File(uploadDir, avatarFileName);
-            System.out.println("Avatar file name: " + avatarFileName);
 
             try (InputStream input = avatarPart.getInputStream()) {
                 Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -84,30 +81,8 @@ public class ProfileServlet extends HttpServlet {
                 doGet(request, response);
                 return;
             }
-            
-            try (Connection conn = DBUtil.getConnection()) {
-                String updateSql = "UPDATE users SET avatar_url = ? WHERE id = ?";
-                try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
-                    stmt.setString(1, avatarFileName);
-                    stmt.setInt(2, userId);
-                    stmt.executeUpdate();
-                    int rowsUpdated = stmt.executeUpdate();
-                    System.out.println("Rows updated: " + rowsUpdated);
-
-                }
-                // Mise à jour de l'objet User en session
-                user.setAvatar(avatarFileName);
-                session.setAttribute("user", user);
-            } catch (SQLException e) {
-                request.setAttribute("error", "Erreur lors de la mise à jour de l'avatar.");
-                doGet(request, response);
-                return;
-            }
         }
-        request.setAttribute("success", "Avatar mis à jour avec succès.");
-        response.sendRedirect(request.getContextPath());
-	
-	
 
+        doGet(request, response);
     }
 }
