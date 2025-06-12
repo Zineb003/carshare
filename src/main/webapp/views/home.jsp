@@ -13,7 +13,8 @@
                     <% 
                         List<String> startTowns = (List<String>) request.getAttribute("startTowns");
                         if (startTowns != null) {
-                            for (String town : startTowns) {
+                            List<String> firstFiveTowns = startTowns.subList(0, Math.min(5, startTowns.size()));
+                            for (String town : firstFiveTowns) {
                     %>
                         <option value="<%= town %>"></option>
                     <%

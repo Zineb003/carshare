@@ -22,19 +22,13 @@
           <a href="${pageContext.request.contextPath}/create-trip" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Proposer un trajet</a>
           <a href="${pageContext.request.contextPath}/user-trips" class="hidden md:block text-gray-700 hover:text-blue-600 font-medium transition">Mes trajets</a>
           <div class="relative group hidden md:block">
-            <img src="<%= avatar %>" alt="avatar" class="w-10 h-10 rounded-full cursor-pointer transition"/>
+            <img src="<%= avatar %>" alt="avatar" class="w-10 h-10 rounded-full cursor-pointer transition border-2 border-blue-500"/>
 
             <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transform transition-all duration-200 z-50 invisible group-hover:visible">
               <a href="${pageContext.request.contextPath}/profile" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-medium">Profil</a>
               <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-medium">Déconnexion</a>
             </div>
           </div>
-          <form action="${pageContext.request.contextPath}/logout" method="post" class="inline">
-            <button type="submit"
-                    class="hidden md:block text-red-600 hover:text-red-700 font-semibold transition cursor-pointer">
-              Déconnexion
-            </button>
-          </form>
         <% } else { %>
           <a href="${pageContext.request.contextPath}/login" class="hidden md:block text-blue-600 hover:text-blue-700 font-semibold transition">Connexion</a>
           <a href="${pageContext.request.contextPath}/register" class="hidden md:block ml-4 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">

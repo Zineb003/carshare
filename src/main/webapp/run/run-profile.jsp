@@ -7,6 +7,7 @@
     List<String> scripts = new ArrayList<>();
     scripts.add(request.getContextPath() + "/js/menu.js");
     scripts.add(request.getContextPath() + "/js/avatar.js");
+    scripts.add(request.getContextPath() + "/js/edit-profile.js");
 
     request.setAttribute("customScripts", scripts);
 %>

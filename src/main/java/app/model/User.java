@@ -10,15 +10,22 @@ public class User {
     private String avatar;
     private Timestamp createdAt;
 
-    public User() {}
-
     public User(int id, String username, String email, String password, String avatar, Timestamp createdAt) {
+        
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.avatar = avatar;
         this.createdAt = createdAt;
+    }
+
+    public User(String username, String email, String password, String avatar) {
+
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.avatar = avatar;
     }
 
     public int getId() {

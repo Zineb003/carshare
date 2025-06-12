@@ -2,6 +2,8 @@ package app.servlet;
 
 import app.util.DBUtil;
 
+import app.model.User;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,10 +19,11 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
 @WebServlet(urlPatterns = {"/profile"})
-@MultipartConfig(maxFileSize = 1024 * 1024 * 2)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ProfileServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "uploads";
+    private String uploadPath = "/usr/local/tomcat/webapps/carshare-app/uploads";
+    private String uploadPathName = "/uploads";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,45 +45,124 @@ public class ProfileServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        
+        User user = (User) session.getAttribute("user");
 
-        int userId = (int) session.getAttribute("user.id");
+        int userId = (int) user.getId();
 
-        String username = (String) request.getAttribute("user.username");
-        String email = (String) request.getAttribute("user.email");
-        String password = (String) request.getAttribute("user.password");
+        Argon2 argon2 = Argon2Factory.create();
 
-        Part avatarPart = request.getPart("user.avatar");
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        Part avatar = request.getPart("avatar");
+        String avatar_url = "";
 
-        String avatarFileName = null;
+        if(avatar != null && username != null && !username.isEmpty() && email != null && !email.isEmpty() && password != null && !password.isEmpty()) {
 
-        // Upload avatar si fichier choisi
-        if (avatarPart != null && avatarPart.getSize() > 0) {
-            String submittedFileName = Path.of(avatarPart.getSubmittedFileName()).getFileName().toString();
-            String fileExt = "";
+ 
+            avatar_url = avatar.getSubmittedFileName();
+            avatar.write(uploadPath + File.separator + avatar_url);
 
-            int i = submittedFileName.lastIndexOf('.');
-            if (i > 0) {
-                fileExt = submittedFileName.substring(i);
+            String hashedPassword = argon2.hash(4, 65536, 1, password);
+
+            String updateSql = "UPDATE users SET username = ?, email = ?, password = ?, avatar_url = ? WHERE id = ?";
+            try (Connection conn = DBUtil.getConnection()) {
+
+                try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                    updateStmt.setString(1, username);
+                    updateStmt.setString(2, email);
+                    updateStmt.setString(3, hashedPassword);
+                    updateStmt.setString(4, uploadPathName + File.separator + avatar_url);
+                    updateStmt.setInt(5, userId);
+
+                    int affectedRows = updateStmt.executeUpdate();
+                    if (affectedRows == 0) {
+                        request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                    }
+
+                    user.setUsername(username);
+                    user.setEmail(email);
+                    user.setAvatar(request.getContextPath() + uploadPathName + File.separator + avatar_url);
+
+                    request.setAttribute("success", "Les informations ont bien été modifiées !");
+                    request.setAttribute("user", user);
+
+                } catch (SQLException e) {
+                    request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                }
+
+            } catch (SQLException e) {
+                request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+            } finally {
+                argon2.wipeArray(password.toCharArray());
             }
 
-            // Nom unique pour éviter conflit, ex: userId_timestamp.ext
-            avatarFileName = "avatar_" + userId + "_" + System.currentTimeMillis() + fileExt;
+        } else if (username != null && !username.isEmpty() && email != null && !email.isEmpty() && password != null && !password.isEmpty()) {
 
-            String applicationPath = request.getServletContext().getRealPath("");
-            String uploadPath = applicationPath + File.separator + UPLOAD_DIR;
+            String hashedPassword = argon2.hash(4, 65536, 1, password);
 
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
+            String updateSql = "UPDATE users SET username = ?, email = ?, password = ? WHERE id = ?";
+            try (Connection conn = DBUtil.getConnection()) {
 
-            File file = new File(uploadDir, avatarFileName);
+                try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                    updateStmt.setString(1, username);
+                    updateStmt.setString(2, email);
+                    updateStmt.setString(3, hashedPassword);
+                    updateStmt.setInt(4, userId);
 
-            try (InputStream input = avatarPart.getInputStream()) {
-                Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                request.setAttribute("error", "Erreur lors de l'upload de l'avatar.");
-                doGet(request, response);
-                return;
+                    int affectedRows = updateStmt.executeUpdate();
+                    if (affectedRows == 0) {
+                        request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                    }
+
+                    user.setUsername(username);
+                    user.setEmail(email);
+
+                    request.setAttribute("success", "Les informations ont bien été modifiées !");
+                    request.setAttribute("user", user);
+
+                } catch (SQLException e) {
+                    request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                }
+            } catch (SQLException e) {
+                request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+            } finally {
+                argon2.wipeArray(password.toCharArray());
             }
+
+
+        } else if (username != null && !username.isEmpty() && email != null && !email.isEmpty()) {
+             
+            String updateSql = "UPDATE users SET username = ?, email = ? WHERE id = ?";
+            try (Connection conn = DBUtil.getConnection()) {
+
+                try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                    updateStmt.setString(1, username);
+                    updateStmt.setString(2, email);
+                    updateStmt.setInt(3, userId);
+
+                    int affectedRows = updateStmt.executeUpdate();
+                    if (affectedRows == 0) {
+                        request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                    }
+
+                    user.setUsername(username);
+                    user.setEmail(email);
+                    
+                    request.setAttribute("success", "Les informations ont bien été modifiées !");
+                    request.setAttribute("user", user);
+
+                } catch (SQLException e) {
+                    request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                }
+
+            } catch (SQLException e) {
+                request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+            }
+        
+        } else {
+            request.setAttribute("error", "Une erreur est survenue pendant la modification des informations.");
         }
 
         doGet(request, response);

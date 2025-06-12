@@ -58,7 +58,7 @@ public class LoginServlet extends HttpServlet {
             
                 if (argon2.verify(hashedPassword, password)) {
 
-                    HttpSession session = request.getSession();
+                    HttpSession session_create = request.getSession();
                     User user = new User(
                         rs.getInt("id"),
                         rs.getString("username"),
@@ -68,7 +68,7 @@ public class LoginServlet extends HttpServlet {
                         rs.getTimestamp("created_at")
                     );
 
-                    session.setAttribute("user", user);
+                    session_create.setAttribute("user", user);
 
                     response.sendRedirect(request.getContextPath() + "/profile");
                 } else {
@@ -76,7 +76,7 @@ public class LoginServlet extends HttpServlet {
                     request.getRequestDispatcher("/run/run-login.jsp").forward(request, response);
                 }
             } else {
-                request.setAttribute("error", "Il existe déjà un compte avec cette adresse e-mail.");
+                request.setAttribute("error", "Indentifiants incorrects.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
                 dispatcher.forward(request, response);
             }

@@ -26,40 +26,62 @@
             </div>
         <% } %>
 
-        <form action="${pageContext.request.contextPath}/profile" method="post" enctype="multipart/form-data" class="space-y-6 max-w-4xl mx-auto">
-
-            <div class="flex flex-col items-center">
-                <img id="avatarPreview" src="<%= avatar %>" alt="Avatar" 
-                    class="w-24 h-24 rounded-full object-cover mb-3 border border-gray-300" />
-                <label for="avatar" 
-                    class="cursor-pointer text-blue-600 hover:underline text-sm">Changer l'avatar</label>
-                <input type="file" id="avatar" name="avatar" accept="image/*" class="hidden" />
+        <div id="read-profile" class="space-y-6 max-w-4xl mx-auto">
+            <div class="flex justify-center items-center">
+                <div class="relative flex items-center justify-center w-[165px] h-[165px] transition-all duration-300">
+                    <img id="avatar_image" src="<%= avatar %>" alt="Avatar" class="absolute w-[165px] h-[165px] object-cover border-2 border-blue-500 rounded-full" />
+                </div>
             </div>
+            <p><strong>Nom d'utilisateur :</strong> <%= username %></p>
+            <p><strong>Adresse e-mail :</strong> <%= email %></p>
+        </div>
 
-            <div>
-                <label for="username" class="block mb-1 font-semibold text-gray-700">Nom d'utilisateur</label>
-                <input type="text" id="username" name="username" required
-                    value="<%= username %>"
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
+        <div id="edit-profile">
+            <form action="${pageContext.request.contextPath}/profile" method="post" enctype="multipart/form-data" class="space-y-6 max-w-4xl mx-auto">
 
-            <div>
-                <label for="email" class="block mb-1 font-semibold text-gray-700">Email</label>
-                <input type="email" id="email" name="email" required
-                    value="<%= email %>"
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
+                <div class="flex justify-center items-center">
+                    <div class="relative flex items-center justify-center w-[165px] h-[165px] transition-all duration-300">
+                        <input type="file" id="avatar" name="avatar" accept="image/*" class="hidden" />
+                        <img id="avatarPreview" src="<%= avatar %>" alt="Avatar" class="absolute w-[165px] h-[165px] object-cover border-2 border-blue-500 rounded-full" />
+                        <label for="avatar" class="absolute flex items-center justify-center w-[165px] h-[165px] cursor-pointer transition-all duration-200 bg-transparent text-transparent rounded-full hover:bg-blue-500 hover:text-white z-10">Changer l'avatar</label>
+                    </div>
+                </div>
 
-            <div>
-                <label for="password" class="block mb-1 font-semibold text-gray-700">Nouveau mot de passe</label>
-                <input type="password" id="password" name="password" placeholder="Laissez vide pour ne pas changer"
-                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
+                <div>
+                    <label for="username" class="block mb-1 font-semibold text-gray-700">Nom d'utilisateur</label>
+                    <input type="text" id="username" name="username" required
+                        placeholder="Nom d'utilisateur"
+                        value="<%= username %>"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
 
-            <button type="submit" 
-                    class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition cursor-pointer">
-                Enregistrer
+                <div>
+                    <label for="email" class="block mb-1 font-semibold text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" required
+                        placeholder="Adresse e-mail"
+                        value="<%= email %>"
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <h2 class="text-xl my-4 text-center">Changement de mot de passe</h2>
+                    <label for="password" class="block mb-1 font-semibold text-gray-700">Nouveau mot de passe</label>
+                    <input type="password" id="password" name="password" placeholder="Laissez vide pour ne pas changer de mot de passe..."
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div class="text-center">
+                    <button id="save-button" type="submit" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4 cursor-pointer">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="text-center">
+            <button id="edit-button" type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4 cursor-pointer">
+                Modifier
             </button>
-        </form>
+        </div>
     </div>
 </section>

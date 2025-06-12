@@ -6,7 +6,6 @@
 
     List<String> scripts = new ArrayList<>();
     scripts.add(request.getContextPath() + "/js/menu.js");
-    scripts.add(request.getContextPath() + "/js/villes.js");
 
     request.setAttribute("customScripts", scripts);
 %>

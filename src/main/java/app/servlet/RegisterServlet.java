@@ -52,6 +52,9 @@ public class RegisterServlet extends HttpServlet {
                     request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
                     return;
                 }
+            } catch (SQLException e) {
+                request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
             }
 
             String hashedPassword = argon2.hash(4, 65536, 1, password);
@@ -67,13 +70,15 @@ public class RegisterServlet extends HttpServlet {
                     request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
                     request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
                 }
+            } catch (SQLException e) {
+                request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
             }
 
             request.setAttribute("success", "Inscription réussie ! Veuillez vous connecter.");
             request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            e.printStackTrace();
             request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
             request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
         } finally {
