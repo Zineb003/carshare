@@ -2,7 +2,7 @@
 
 <%
     request.setAttribute("title", "Carshare - Connexion");
-    request.setAttribute("content", "login.jsp");
+    request.setAttribute("content", "/views/login.jsp");
 
     List<String> scripts = new ArrayList<>();
     scripts.add(request.getContextPath() + "/js/menu.js");
@@ -10,4 +10,4 @@
     request.setAttribute("customScripts", scripts);
 %>
 
-<jsp:include page="layout.jsp" />
+<jsp:include page="/layout.jsp" />

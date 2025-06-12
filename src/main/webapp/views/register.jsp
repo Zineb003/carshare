@@ -7,11 +7,18 @@
 
         <% 
             String error = (String) request.getAttribute("error");
+            String success = (String) request.getAttribute("success");
         %>
 
         <% if (error != null) { %>
             <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
                 <%= error %>
+            </div>
+        <% } %>
+
+        <% if (success != null) { %>
+            <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">
+                <%= success %>
             </div>
         <% } %>
 

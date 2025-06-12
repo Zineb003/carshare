@@ -5,8 +5,8 @@
     request.setAttribute("content", "/views/home.jsp");
 
     List<String> scripts = new ArrayList<>();
-    scripts.add("/js/menu.js");
-    scripts.add("/js/villes.js");
+    scripts.add(request.getContextPath() + "/js/menu.js");
+    scripts.add(request.getContextPath() + "/js/villes.js");
 
     request.setAttribute("customScripts", scripts);
 %>

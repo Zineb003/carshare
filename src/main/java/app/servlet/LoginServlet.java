@@ -25,12 +25,20 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+           
+            response.sendRedirect(request.getContextPath() + "/profile");
+            return;
+        }
+
+
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
          if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Tous les champs sont obligatoires.");
-            request.getRequestDispatcher("run-login.jsp").forward(request, response);
+            request.getRequestDispatcher("/run/run-login.jsp").forward(request, response);
             return;
         }
 
@@ -90,8 +98,7 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
            
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/profile");
-            dispatcher.forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/profile");
             return;
         }
 

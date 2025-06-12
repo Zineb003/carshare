@@ -30,7 +30,7 @@ public class ProfileServlet extends HttpServlet {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("run-profile.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-profile.jsp");
         dispatcher.forward(request, response);
     }
 

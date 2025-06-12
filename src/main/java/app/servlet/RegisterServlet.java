@@ -18,6 +18,13 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+           
+            response.sendRedirect(request.getContextPath() + "/profile");
+            return;
+        }
+
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -26,7 +33,7 @@ public class RegisterServlet extends HttpServlet {
             username.isEmpty() || email.isEmpty() || password.isEmpty()) {
 
             request.setAttribute("error", "Tous les champs sont obligatoires.");
-            request.getRequestDispatcher("run-register.jsp").forward(request, response);
+            request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
             return;
         }
 
@@ -42,7 +49,7 @@ public class RegisterServlet extends HttpServlet {
 
                 if (rs.next()) {
                     request.setAttribute("error", "Un compte avec cet email existe déjà.");
-                    request.getRequestDispatcher("run-register.jsp").forward(request, response);
+                    request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
                     return;
                 }
             }
@@ -58,17 +65,17 @@ public class RegisterServlet extends HttpServlet {
                 int affectedRows = insertStmt.executeUpdate();
                 if (affectedRows == 0) {
                     request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
-                    request.getRequestDispatcher("run-register.jsp").forward(request, response);
+                    request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
                 }
             }
 
             request.setAttribute("success", "Inscription réussie ! Veuillez vous connecter.");
-            request.getRequestDispatcher("run-login.jsp").forward(request, response);
+            request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
 
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
-            request.getRequestDispatcher("run-register.jsp").forward(request, response);
+            request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
         } finally {
             argon2.wipeArray(password.toCharArray());
         }
@@ -80,12 +87,11 @@ public class RegisterServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("user") != null) {
            
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/");
-            dispatcher.forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/profile");
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("run-register.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-register.jsp");
         dispatcher.forward(request, response);
     }
 }
