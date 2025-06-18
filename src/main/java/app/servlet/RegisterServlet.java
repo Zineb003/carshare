@@ -16,10 +16,24 @@ import de.mkammerer.argon2.Argon2Factory;
 public class RegisterServlet extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute("user") != null) {
+           
+            response.sendRedirect(request.getContextPath() + "/profile");
+            return;
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-register.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
+        if (session.getAttribute("user") != null) {
            
             response.sendRedirect(request.getContextPath() + "/profile");
             return;
@@ -33,7 +47,7 @@ public class RegisterServlet extends HttpServlet {
             username.isEmpty() || email.isEmpty() || password.isEmpty()) {
 
             request.setAttribute("error", "Tous les champs sont obligatoires.");
-            request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
+            doGet(request, response);
             return;
         }
 
@@ -68,35 +82,21 @@ public class RegisterServlet extends HttpServlet {
                 int affectedRows = insertStmt.executeUpdate();
                 if (affectedRows == 0) {
                     request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
-                    request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
+                    doGet(request, response);
                 }
             } catch (SQLException e) {
                 request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
-                request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
+                doGet(request, response);
             }
 
             request.setAttribute("success", "Inscription réussie ! Veuillez vous connecter.");
-            request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
+            doGet(request, response);
 
         } catch (SQLException e) {
             request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
-            request.getRequestDispatcher("/run/run-register.jsp").forward(request, response);
+            doGet(request, response);
         } finally {
             argon2.wipeArray(password.toCharArray());
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-           
-            response.sendRedirect(request.getContextPath() + "/profile");
-            return;
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-register.jsp");
-        dispatcher.forward(request, response);
     }
 }

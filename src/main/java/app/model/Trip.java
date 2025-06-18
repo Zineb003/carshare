@@ -1,7 +1,7 @@
 package app.model;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -12,7 +12,7 @@ public class Trip {
     private String endTown;
     private String startAddress;
     private String endAddress;
-    private Date startDate;
+    private LocalDateTime startDate;
     private Time startHour;
     private int nbPlaces;
     private BigDecimal price;
@@ -25,7 +25,7 @@ public class Trip {
     public Trip() {}
 
     public Trip(int id, int driverId, String startTown, String endTown,
-                String startAddress, String endAddress, Date startDate, Time startHour,
+                String startAddress, String endAddress, LocalDateTime startDate, Time startHour,
                 int nbPlaces, BigDecimal price, Time estimatedTime,
                 String description, String vehicule, String status, Timestamp createdAt) {
         this.id = id;
@@ -93,11 +93,11 @@ public class Trip {
         this.endAddress = endAddress;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 

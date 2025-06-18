@@ -1,4 +1,4 @@
-<%@ page import="java.util.List, java.util.ArrayList" %>
+<%@ page contentType="text/html;charset=UTF-8" import="java.util.List, java.util.ArrayList" %>
 
 <%
     request.setAttribute("title", "Carshare - Accueil");

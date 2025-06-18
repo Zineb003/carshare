@@ -25,19 +25,19 @@
         <form action="${pageContext.request.contextPath}/register" method="post" class="space-y-5">
 
             <div>
-                <label for="username" class="block text-gray-700 font-semibold mb-1">Nom d'utilisateur</label>
+                <label for="username" class="block text-gray-700 font-semibold mb-1">Nom d'utilisateur <span class="text-red-700">*</span></label>
                 <input type="text" name="username" id="username" required
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
-                <label for="email" class="block text-gray-700 font-semibold mb-1">Adresse e-mail</label>
+                <label for="email" class="block text-gray-700 font-semibold mb-1">Adresse e-mail <span class="text-red-700">*</span></label>
                 <input type="email" name="email" id="email" required
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
-                <label for="password" class="block text-gray-700 font-semibold mb-1">Mot de passe</label>
+                <label for="password" class="block text-gray-700 font-semibold mb-1">Mot de passe <span class="text-red-700">*</span></label>
                 <input type="password" name="password" id="password" required
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>

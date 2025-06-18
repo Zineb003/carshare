@@ -23,10 +23,24 @@ import de.mkammerer.argon2.Argon2Factory;
 public class LoginServlet extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute("user") != null) {
+           
+            response.sendRedirect(request.getContextPath() + "/profile");
+            return;
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
+        if (session.getAttribute("user") != null) {
            
             response.sendRedirect(request.getContextPath() + "/profile");
             return;
@@ -38,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 
          if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Tous les champs sont obligatoires.");
-            request.getRequestDispatcher("/run/run-login.jsp").forward(request, response);
+            doGet(request, response);
             return;
         }
 
@@ -73,12 +87,11 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/profile");
                 } else {
                     request.setAttribute("error", "Adresse e-mail ou mot de passe incorrect.");
-                    request.getRequestDispatcher("/run/run-login.jsp").forward(request, response);
+                    doGet(request, response);
                 }
             } else {
                 request.setAttribute("error", "Indentifiants incorrects.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
-                dispatcher.forward(request, response);
+                doGet(request, response);
             }
 
             rs.close();
@@ -87,22 +100,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (Exception e) {
             request.setAttribute("error", "Erreur serveur : " + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
-            dispatcher.forward(request, response);
+            doGet(request, response);
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-           
-            response.sendRedirect(request.getContextPath() + "/profile");
-            return;
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
-        dispatcher.forward(request, response);
     }
 }

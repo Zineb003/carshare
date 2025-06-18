@@ -48,7 +48,7 @@
                 </div>
 
                 <div>
-                    <label for="username" class="block mb-1 font-semibold text-gray-700">Nom d'utilisateur</label>
+                    <label for="username" class="block mb-1 font-semibold text-gray-700">Nom d'utilisateur <span class="text-red-700">*</span></label>
                     <input type="text" id="username" name="username" required
                         placeholder="Nom d'utilisateur"
                         value="<%= username %>"
@@ -56,7 +56,7 @@
                 </div>
 
                 <div>
-                    <label for="email" class="block mb-1 font-semibold text-gray-700">Email</label>
+                    <label for="email" class="block mb-1 font-semibold text-gray-700">Email <span class="text-red-700">*</span></label>
                     <input type="email" id="email" name="email" required
                         placeholder="Adresse e-mail"
                         value="<%= email %>"
