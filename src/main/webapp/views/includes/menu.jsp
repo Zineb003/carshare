@@ -13,6 +13,8 @@
       <%-- User menu --%>
       <div class="flex items-center space-x-4">
           <a href="${pageContext.request.contextPath}/" class="hidden md:block text-gray-700 hover:text-blue-600 font-semibold transition">Accueil</a>
+          <a href="${pageContext.request.contextPath}/drivertrips" class="hidden md:block text-gray-700 hover:text-blue-600 font-semibold transition">Trajets Conducteur</a>
+          <a href="${pageContext.request.contextPath}/passengertrips" class="hidden md:block text-gray-700 hover:text-blue-600 font-semibold transition">Trajets Passager</a>
         <%
            if (session.getAttribute("user") != null) { 
               User user = (User) session.getAttribute("user");
@@ -51,6 +53,8 @@
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
     <a href="${pageContext.request.contextPath}/" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Accueil</a>
+    <a href="${pageContext.request.contextPath}/drivertrips" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Trajets Conducteur</a>
+    <a href="${pageContext.request.contextPath}/passengertrips" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Trajets Passagers</a>
     <% 
         if (session.getAttribute("user") != null) { 
             User user = (User) session.getAttribute("user");
