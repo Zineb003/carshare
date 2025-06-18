@@ -2,6 +2,7 @@ package app.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -91,6 +92,11 @@ public class Trip {
 
     public void setEndAddress(String endAddress) {
         this.endAddress = endAddress;
+    }
+
+    public String getFormattedStartDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'à' HH:mm");
+        return startDate.format(formatter);
     }
 
     public LocalDateTime getStartDate() {
