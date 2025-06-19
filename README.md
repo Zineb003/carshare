@@ -1,17 +1,26 @@
-# carshare
--> cd carshare
+# Projet Carshare
 
--> sudo apt install docker-cli
-     sudo apt install docker-compose
+## Installation de docker
 
--> sudo docker-compose up --build
+Veuillez suivre la documentation docker pour que l'installation corresponde à votre distribution : 
+- https://docs.docker.com/engine/install/
 
-(user:tomcat & passwd:tomcat)
-phpmyadmin : localhost:8091
+## Commandes
+Déplacement dans le dossier carshare : 
+- cd carshare
+
+Lancement des conteneurs : 
+- docker compose up -d --build
+
+Suppression des conteneurs : 
+- docker compose down -v
+
+## Adresses URL 
+
 app : localhost:8090/carshare-app
 
-apres chaque modification faire : 
-sudo docker-compose down -v --rmi all
-mvn clean install 
-puis recopier coller dans /var/lib/tomcat10/webapp
-sudo  docker-compose up --build
+## Manager App et Base de données
+
+- Identifiants :
+     - Utilisateur : tomcat
+     - Mot de passe : tomcat
