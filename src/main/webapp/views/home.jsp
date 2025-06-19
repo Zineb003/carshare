@@ -57,24 +57,20 @@
             <input type="date" name="date" required
                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
         </div>
-        <div class="flex justify-center">
-            <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer">
-                Rechercher un trajet
-            </button>
+
+        <div class="flex justify-around">
+            <form action="<%= request.getContextPath() %>/searchpassagers" method="post" class="flex justify-start w-fit">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer">
+                    Rechercher un trajet passager
+                </button>
+            </form>
+
+            <form action="<%= request.getContextPath() %>/searchdrivers" method="post" class="flex justify-end w-fit">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer">
+                    Rechercher un trajet conducteur
+                </button>
+            </form>
         </div>
-
-        <form action="<%= request.getContextPath() %>/searchpassagers" method="post" class="flex justify-start">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer">
-                Rechercher un trajet passager
-            </button>
-        </form>
-
-        <form action="<%= request.getContextPath() %>/searchdrivers" method="post" class="flex justify-end">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer">
-                Rechercher un trajet conducteur
-            </button>
-        </form>
     </div>
     <div class="mt-12 text-center">
         <a href="${pageContext.request.contextPath}/createtrip"
