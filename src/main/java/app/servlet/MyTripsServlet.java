@@ -34,9 +34,9 @@ public class MyTripsServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         int userId = (int) user.getId();
 
-        List<Trip> trips = new ArrayList<>();
+        List<Trip> passengerTrips = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection()) {
-            String sql = "SELECT * FROM trips WHERE driver_id = ? ORDER BY start_date DESC";
+            String sql = "SELECT * FROM trips WHERE user_id = ? AND trip_type = 0 ORDER BY start_date ASC";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, userId);
                 ResultSet rs = stmt.executeQuery();
@@ -49,7 +49,7 @@ public class MyTripsServlet extends HttpServlet {
                     trip.setNbPlaces(rs.getInt("nb_places"));
                     trip.setPrice(rs.getBigDecimal("price"));
                     trip.setDescription(rs.getString("description"));
-                    trips.add(trip);
+                    passengerTrips.add(trip);
                 }
             }
         } catch (SQLException e) {
@@ -57,7 +57,31 @@ public class MyTripsServlet extends HttpServlet {
             request.setAttribute("error", "Erreur lors de la récupération des trajets.");
         }
 
-        request.setAttribute("trips", trips);
+        List<Trip> driverTrips = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection()) {
+            String sql = "SELECT * FROM trips WHERE user_id = ? AND trip_type = 1 ORDER BY start_date ASC";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setStartTown(rs.getString("start_town"));
+                    trip.setEndTown(rs.getString("end_town"));
+                    trip.setStartDate(rs.getTimestamp("start_date").toLocalDateTime());
+                    trip.setNbPlaces(rs.getInt("nb_places"));
+                    trip.setPrice(rs.getBigDecimal("price"));
+                    trip.setDescription(rs.getString("description"));
+                    driverTrips.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Erreur lors de la récupération des trajets.");
+        }
+
+        request.setAttribute("passengerTrips", passengerTrips);
+        request.setAttribute("driverTrips", driverTrips);
         request.getRequestDispatcher("/run/run-mytrips.jsp").forward(request, response);
     }
 }

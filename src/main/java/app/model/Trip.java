@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 public class Trip {
     private int id;
-    private int driverId;
+    private int userId;
     private String startTown;
     private String endTown;
     private String startAddress;
@@ -20,17 +20,19 @@ public class Trip {
     private Time estimatedTime;
     private String description;
     private String vehicule;
-    private String status;
+    private int tripType;
     private Timestamp createdAt;
+
+    private String username;
 
     public Trip() {}
 
-    public Trip(int id, int driverId, String startTown, String endTown,
+    public Trip(int id, int userId, String startTown, String endTown,
                 String startAddress, String endAddress, LocalDateTime startDate, Time startHour,
                 int nbPlaces, BigDecimal price, Time estimatedTime,
-                String description, String vehicule, String status, Timestamp createdAt) {
+                String description, String vehicule, int tripType, Timestamp createdAt) {
         this.id = id;
-        this.driverId = driverId;
+        this.userId = userId;
         this.startTown = startTown;
         this.endTown = endTown;
         this.startAddress = startAddress;
@@ -42,7 +44,7 @@ public class Trip {
         this.estimatedTime = estimatedTime;
         this.description = description;
         this.vehicule = vehicule;
-        this.status = status;
+        this.tripType = tripType;
         this.createdAt = createdAt;
     }
 
@@ -54,12 +56,12 @@ public class Trip {
         this.id = id;
     }
 
-    public int getDriverId() {
-        return driverId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setDriverId(int driverId) {
-        this.driverId = driverId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getStartTown() {
@@ -155,12 +157,12 @@ public class Trip {
         this.vehicule = vehicule;
     }
 
-    public String getStatus() {
-        return status;
+    public int getTripType() {
+        return tripType;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setTripType(int tripType) {
+        this.tripType = tripType;
     }
 
     public Timestamp getCreatedAt() {
@@ -169,5 +171,13 @@ public class Trip {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

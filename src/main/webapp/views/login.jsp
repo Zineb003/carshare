@@ -6,14 +6,14 @@
 
         <form action="${pageContext.request.contextPath}/login" method="post" class="space-y-4">
             <div>
-                <label for="email" class="block text-gray-700 font-semibold mb-1">Adresse e-mail</label>
-                <input type="email" name="email" id="email" required
+                <label for="email" class="block text-gray-700 font-semibold mb-1">Adresse e-mail <span class="text-red-700">*</span></label>
+                <input type="email" name="email" id="email" placeholder="Adresse e-mail" required
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 
             <div>
-                <label for="password" class="block text-gray-700 font-semibold mb-1">Mot de passe</label>
-                <input type="password" name="password" id="password" required
+                <label for="password" class="block text-gray-700 font-semibold mb-1">Mot de passe <span class="text-red-700">*</span></label>
+                <input type="password" name="password" id="password" placeholder="Mot de passe" required
                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 

@@ -23,6 +23,7 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         List<String> startTowns = new ArrayList<>();
+        List<String> endTowns = new ArrayList<>();
 
         try (Connection conn = DBUtil.getConnection();
             PreparedStatement stmt = conn.prepareStatement("SELECT DISTINCT start_town FROM trips");
@@ -34,8 +35,20 @@ public class HomeServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
+         try (Connection conn = DBUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT DISTINCT end_town FROM trips");
+            ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                endTowns.add(rs.getString("end_town"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         request.setAttribute("startTowns", startTowns);
+        request.setAttribute("endTowns", endTowns);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-home.jsp");
         dispatcher.forward(request, response);
     }

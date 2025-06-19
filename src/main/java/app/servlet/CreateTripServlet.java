@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-@WebServlet(urlPatterns = {"/create-trip"})
+@WebServlet(urlPatterns = {"/createtrip"})
 public class CreateTripServlet extends HttpServlet {
     
     @Override
@@ -33,7 +33,7 @@ public class CreateTripServlet extends HttpServlet {
             return;
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-create-trip.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-createtrip.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -88,7 +88,7 @@ public class CreateTripServlet extends HttpServlet {
 
 
             try (Connection conn = DBUtil.getConnection()) {
-                String sql = "INSERT INTO trips (driver_id, start_town, end_town, start_address, end_address, " +
+                String sql = "INSERT INTO trips (user_id, start_town, end_town, start_address, end_address, " +
                             "start_date, nb_places, price, description, vehicule, trip_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 try (PreparedStatement stmt = conn.prepareStatement(sql)) {

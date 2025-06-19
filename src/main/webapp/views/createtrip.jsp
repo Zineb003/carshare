@@ -12,7 +12,7 @@
     <div class="size-2/3 mx-auto mt-10 bg-white p-8 rounded-xl shadow-md mt-20 mb-20">
         <h1 class="text-2xl font-semibold mb-6 text-center">Créer un trajet</h1>
 
-        <form action="${pageContext.request.contextPath}/create-trip" method="post" class="space-y-5">
+        <form action="${pageContext.request.contextPath}/createtrip" method="post" class="space-y-5">
 
             <% if (error != null) { %>
                 <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">

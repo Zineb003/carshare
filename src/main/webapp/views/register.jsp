@@ -26,19 +26,19 @@
 
             <div>
                 <label for="username" class="block text-gray-700 font-semibold mb-1">Nom d'utilisateur <span class="text-red-700">*</span></label>
-                <input type="text" name="username" id="username" required
+                <input type="text" name="username" id="username" placeholder="Nom d'utilisateur" required
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
                 <label for="email" class="block text-gray-700 font-semibold mb-1">Adresse e-mail <span class="text-red-700">*</span></label>
-                <input type="email" name="email" id="email" required
+                <input type="email" name="email" id="email" placeholder="Adresse e-mail" required
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
                 <label for="password" class="block text-gray-700 font-semibold mb-1">Mot de passe <span class="text-red-700">*</span></label>
-                <input type="password" name="password" id="password" required
+                <input type="password" name="password" id="password" placeholder="Mot de passe" required
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 

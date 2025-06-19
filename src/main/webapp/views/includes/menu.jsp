@@ -20,13 +20,14 @@
               User user = (User) session.getAttribute("user");
               String avatar = (String) user.getAvatar();
         %>
-          <a href="${pageContext.request.contextPath}/create-trip" class="hidden md:block text-gray-700 hover:text-blue-600 font-semibold transition">Proposer un trajet</a>
-          <a href="${pageContext.request.contextPath}/mytrips" class="hidden md:block text-gray-700 hover:text-blue-600 font-semibold transition">Mes trajets</a>
+          <a href="${pageContext.request.contextPath}/createtrip" class="hidden md:block text-gray-700 hover:text-blue-600 font-semibold transition">Proposer un trajet</a>
           <div class="relative group hidden md:block">
             <img src="<%= avatar %>" alt="avatar" class="w-10 h-10 rounded-full cursor-pointer transition border-2 border-blue-500"/>
 
             <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transform transition-all duration-200 z-50 invisible group-hover:visible">
               <a href="${pageContext.request.contextPath}/profile" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-semibold">Profil</a>
+              <a href="${pageContext.request.contextPath}/mytrips" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-semibold">Mes trajets</a>
+              <a href="${pageContext.request.contextPath}/mybookings" class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600 font-semibold">Mes réservations</a>
               <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-red-600 hover:bg-red-50 hover:text-red-700 font-semibold">Déconnexion</a>
             </div>
           </div>
@@ -60,8 +61,9 @@
             User user = (User) session.getAttribute("user");
             String avatar = (String) user.getAvatar();
     %>
-      <a href="${pageContext.request.contextPath}/create-trip" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Proposer un trajet</a>
+      <a href="${pageContext.request.contextPath}/createtrip" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Proposer un trajet</a>
       <a href="${pageContext.request.contextPath}/mytrips" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Mes trajets</a>
+      <a href="${pageContext.request.contextPath}/mybookings" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Mes réservations</a>
       <a href="${pageContext.request.contextPath}/profile" class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 font-semibold">Profil</a>
       <form action="${pageContext.request.contextPath}/logout" method="post" class="block px-4 py-3 hover:bg-red-50">
         <button type="submit" class="w-full text-left text-red-600 hover:text-red-700 font-semibold cursor-pointer">
