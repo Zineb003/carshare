@@ -13,7 +13,6 @@ public class DBUtil {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
             throw new RuntimeException("Erreur lors du chargement du driver JDBC", e);
         }
     }
