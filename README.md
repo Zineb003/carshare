@@ -18,6 +18,7 @@ Suppression des conteneurs :
 ## Adresses URL 
 
 app : localhost:8090/carshare-app
+phpmyadmin : localhost:8091/
 
 ## Manager App et Base de données
 
