@@ -1,36 +1,40 @@
 package app.servlet;
 
 import app.util.DBUtil;
+import app.model.User;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
 import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import app.model.User;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 
 @WebServlet(urlPatterns = {"/profile"})
-@MultipartConfig(maxFileSize = 1024 * 1024 * 2)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class ProfileServlet extends HttpServlet {
 
-    private static final String UPLOAD_DIR = "uploads";
+    private String uploadPath = "/usr/local/tomcat/webapps/carshare-app/uploads";
+    private String uploadPathName = "/uploads";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        RequestDispatcher dispatcher = request.getRequestDispatcher("run-profile.jsp");
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-profile.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -38,76 +42,97 @@ public class ProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
+        
         User user = (User) session.getAttribute("user");
-        int userId = user.getId();
+        int userId = (int) user.getId();
 
+        Argon2 argon2 = Argon2Factory.create();
+        String username = request.getParameter("username");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        Part avatar = request.getPart("avatar");
 
-        String username = (String) request.getAttribute("user.username");
-        String email = (String) request.getAttribute("user.email");
-        String password = (String) request.getAttribute("user.password");
+        String avatarUrl = null;
+        String hashedPassword = null;
 
-        Part avatarPart = request.getPart("user.avatar");
+        boolean hasUsername = username != null && !username.isEmpty();
+        boolean hasEmail = email != null && !email.isEmpty();
+        boolean hasPassword = password != null && !password.isEmpty();
+        boolean hasAvatar = avatar != null && avatar.getSize() > 0;
 
-        String avatarFileName = null;
+        if (!hasUsername || !hasEmail) {
+            request.setAttribute("error", "Nom d'utilisateur et email sont requis.");
+            return;
+        }
 
-        // Upload avatar si fichier choisi
-        if (avatarPart != null && avatarPart.getSize() > 0) {
-            String submittedFileName = Path.of(avatarPart.getSubmittedFileName()).getFileName().toString();
-            String fileExt = "";
-
-            int i = submittedFileName.lastIndexOf('.');
-            if (i > 0) {
-                fileExt = submittedFileName.substring(i);
+        try {
+            if (hasAvatar) {
+                avatarUrl = avatar.getSubmittedFileName();
+                avatar.write(uploadPath + File.separator + avatarUrl);
             }
 
-            // Nom unique pour éviter conflit, ex: userId_timestamp.ext
-            avatarFileName = "avatar_" + userId + "_" + System.currentTimeMillis() + fileExt;
-
-            String applicationPath = request.getServletContext().getRealPath("");
-            String uploadPath = applicationPath + File.separator + UPLOAD_DIR;
-
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists()) uploadDir.mkdirs();
-
-            File file = new File(uploadDir, avatarFileName);
-            System.out.println("Avatar file name: " + avatarFileName);
-
-            try (InputStream input = avatarPart.getInputStream()) {
-                Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                request.setAttribute("error", "Erreur lors de l'upload de l'avatar.");
-                doGet(request, response);
-                return;
+            if (hasPassword) {
+                hashedPassword = argon2.hash(4, 65536, 1, password);
             }
-            
-            try (Connection conn = DBUtil.getConnection()) {
-                String updateSql = "UPDATE users SET avatar_url = ? WHERE id = ?";
-                try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
-                    stmt.setString(1, avatarFileName);
-                    stmt.setInt(2, userId);
-                    stmt.executeUpdate();
-                    int rowsUpdated = stmt.executeUpdate();
-                    System.out.println("Rows updated: " + rowsUpdated);
 
+            // Construction dynamique de la requête SQL
+            StringBuilder sql = new StringBuilder("UPDATE users SET username = ?, email = ?");
+            List<Object> params = new ArrayList<>(List.of(username, email));
+
+            if (hashedPassword != null) {
+                sql.append(", password = ?");
+                params.add(hashedPassword);
+            }
+
+            if (avatarUrl != null) {
+                sql.append(", avatar_url = ?");
+                params.add(uploadPathName + File.separator + avatarUrl);
+            }
+
+            sql.append(" WHERE id = ?");
+            params.add(userId);
+
+            try (Connection conn = DBUtil.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+
+                for (int i = 0; i < params.size(); i++) {
+                    stmt.setObject(i + 1, params.get(i));
                 }
-                // Mise à jour de l'objet User en session
-                user.setAvatar(avatarFileName);
-                session.setAttribute("user", user);
+
+                int affectedRows = stmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+                    return;
+                }
+
+                // Mise à jour de l'objet en session
+                user.setUsername(username);
+                user.setEmail(email);
+
+                if (avatarUrl != null) {
+                    user.setAvatar(request.getContextPath() + uploadPathName + File.separator + avatarUrl);
+                }
+
+                request.setAttribute("success", "Les informations ont bien été modifiées !");
+                request.setAttribute("user", user);
+
             } catch (SQLException e) {
-                request.setAttribute("error", "Erreur lors de la mise à jour de l'avatar.");
-                doGet(request, response);
-                return;
+                request.setAttribute("error", "Erreur serveur. Veuillez réessayer.");
+            }
+
+        } catch (Exception e) {
+            request.setAttribute("error", "Erreur serveur inattendue.");
+        } finally {
+            if (hasPassword) {
+                argon2.wipeArray(password.toCharArray());
             }
         }
-        request.setAttribute("success", "Avatar mis à jour avec succès.");
-        response.sendRedirect(request.getContextPath());
-	
-	
 
+        doGet(request, response);
     }
 }

@@ -1,113 +1,122 @@
-
 package app.servlet;
-import java.sql.ResultSet;
+
 import app.util.DBUtil;
-import app.model.Trajet;
+import app.model.User;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
-
-@WebServlet("/createTrip")
-public class CreateTripServlet extends jakarta.servlet.http.HttpServlet {
-
-
+@WebServlet(urlPatterns = {"/createtrip"})
+public class CreateTripServlet extends HttpServlet {
+    
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-	int profilId = Integer.parseInt(request.getParameter("profilId"));
-	String statut = null;
-	try (Connection conn = DBUtil.getConnection()) {
-	    String sql = "SELECT statut FROM profil WHERE id = ?";
-	    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-	        stmt.setInt(1, profilId);
-	        try (ResultSet rs = stmt.executeQuery()) {
-	            if (rs.next()) {
-	                statut = rs.getString("statut");
-	            }
-	        }
-	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-	request.setAttribute("profilId", profilId);
-	request.setAttribute("statut", statut);
-	request.getRequestDispatcher("createTrip.jsp").forward(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-createtrip.jsp");
+        dispatcher.forward(request, response);
     }
 
-
-
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        System.out.println("✅ CreateTripServlet appelé !");
-
-        int profilId = Integer.parseInt(request.getParameter("profilId"));
-        String startTown = request.getParameter("startTown");
-        String endTown = request.getParameter("endTown");
-        String startAddress = request.getParameter("startAddress");
-        String endAddress = request.getParameter("endAddress");
-        String startDateStr = request.getParameter("startDate"); // ex: "2025-05-23T14:30"
-        System.out.println("✅ [LOG] startDateStr  : " + startDateStr);
-        startDateStr = startDateStr.replace("T", " ");
-        if (startDateStr.length() == 16) { startDateStr += ":00"; //si format sans secondes
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute("user") == null ) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
         }
-        System.out.println("✅ [LOG] nouveau startDateStr  : " + startDateStr);
-        Timestamp Date = Timestamp.valueOf(startDateStr);
-        System.out.println("✅ [LOG] Date  : " + Date);
 
-	String priceStr = request.getParameter("price");
-	BigDecimal price = null;
-	if (priceStr != null && !priceStr.trim().isEmpty()) {
-	    price = new BigDecimal(priceStr.trim()); System.out.println("price: " + price);
-	}
+        User user = (User) session.getAttribute("user");
+        int userId = (int) user.getId();
 
-
+        // Récupération des paramètres
+        String startTown = request.getParameter("start_town");
+        String endTown = request.getParameter("end_town");
+        String startAddress = request.getParameter("start_address");
+        String endAddress = request.getParameter("end_address");
+        String startDateStr = request.getParameter("start_date");
+        String nbPlacesStr = request.getParameter("nb_places");
+        String priceStr = request.getParameter("price");
         String description = request.getParameter("description");
+        String vehicule = request.getParameter("vehicule");
+        String tripTypeStr = request.getParameter("trip_type");
         
+        if (startTown == null || startTown.isEmpty() ||
+            endTown == null || endTown.isEmpty() ||
+            startDateStr == null || startDateStr.isEmpty() ||
+            nbPlacesStr == null || nbPlacesStr.isEmpty() ||
+            priceStr == null || priceStr.isEmpty() ||
+            tripTypeStr == null || tripTypeStr.isEmpty()) {
+
+            request.setAttribute("error", "Champs obligatoires manquants.");
+            doGet(request, response);
+            return;
+        }
+
         try {
-            String dateO = startDateStr.split(" ")[0];
+            LocalDateTime startDate = LocalDateTime.parse(startDateStr);
+            Timestamp sqlDate = Timestamp.valueOf(startDate);
+            int nbPlaces = Integer.parseInt(nbPlacesStr);
+            BigDecimal price = new BigDecimal(priceStr);
+            int tripType = Integer.parseInt(tripTypeStr);
 
-            try (Connection conn = DBUtil.getConnection()) {
-                String sql = "INSERT INTO trajets (profilId, startTown, endTown, startAddress, endAddress, startDate, price, description, createdAt) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, profilId);
-                stmt.setString(2, startTown);
-                stmt.setString(3, endTown);
-                stmt.setString(4, startAddress);
-                stmt.setString(5, endAddress);
-                stmt.setTimestamp(6, Date);
-                if (price != null) {
-			stmt.setBigDecimal(7, price);
-		} else {
-			stmt.setNull(7, java.sql.Types.DECIMAL); }
-                stmt.setString(8, description);
-                stmt.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
-
-                stmt.executeUpdate();
-
-                request.setAttribute("message", "Trajet cree avec succès !");
-                response.sendRedirect("search?depart=" + startTown + "&destination=" + endTown + "&date=" + dateO);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                request.setAttribute("error", "Erreur lors de la creation du trajet : " + e.getMessage());
-                request.getRequestDispatcher("createTrip.jsp").forward(request, response);
+            if (startDate.isBefore(LocalDateTime.now())) {
+                request.setAttribute("error", "La date de départ ne peut pas être antérieure à la date actuelle.");
+                doGet(request, response);
+                return;
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "Erreur lors de la conversion des donnees : " + e.getMessage());
-            request.getRequestDispatcher("createTrip.jsp").forward(request, response);
+
+            try (Connection conn = DBUtil.getConnection()) {
+                String sql = "INSERT INTO trips (user_id, start_town, end_town, start_address, end_address, " +
+                            "start_date, nb_places, price, description, vehicule, trip_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.setInt(1, userId);
+                    stmt.setString(2, startTown);
+                    stmt.setString(3, endTown);
+                    stmt.setString(4, startAddress);
+                    stmt.setString(5, endAddress);
+                    stmt.setTimestamp(6, sqlDate);
+                    stmt.setInt(7, nbPlaces);
+                    stmt.setBigDecimal(8, price);
+                    stmt.setString(9, description);
+                    stmt.setString(10, vehicule);
+                    stmt.setInt(11, tripType);
+
+                    stmt.executeUpdate();
+                    request.setAttribute("success", "Trajet créé avec succès !");
+                }
+            }
+
+        } catch (DateTimeParseException | NumberFormatException e) {
+            request.setAttribute("error", "Veuillez vérifier les champs numériques et la date.");
+            doGet(request, response);
+        } catch (SQLException e) {
+            request.setAttribute("error", "Erreur lors de la création du trajet.");
+            doGet(request, response);
         }
+
+        doGet(request, response);
     }
 }

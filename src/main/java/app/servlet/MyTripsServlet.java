@@ -1,77 +1,83 @@
 package app.servlet;
-import java.sql.ResultSet;
+
 import app.util.DBUtil;
-import app.model.Trajet;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import app.model.User;
+import app.model.Trip;
+
 import jakarta.servlet.ServletException;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import app.model.User;
-import java.sql.*;
-import jakarta.servlet.http.*;
 
-@WebServlet("/myTrips")
-public class MyTripsServlet extends jakarta.servlet.http.HttpServlet {
+import java.util.List;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
+@WebServlet(urlPatterns = {"/mytrips"})
+public class MyTripsServlet extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect("login.jsp");
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
         User user = (User) session.getAttribute("user");
-	System.out.println("Utilisateur connecté : " + user.getUsername() + " (ID: " + user.getId() + ")");
+        int userId = (int) user.getId();
 
-        int userId = user.getId();
-
-        List<Trajet> trajets = new ArrayList<>();
-
+        List<Trip> passengerTrips = new ArrayList<>();
         try (Connection conn = DBUtil.getConnection()) {
-            String sql = "SELECT t.*, p.statut, p.typeVehicule, u.username, u.avatar_url FROM trajets t " +
-                         "JOIN profil p ON t.profilId = p.id " +
-                         "JOIN users u ON p.id = u.id " +
-                         "WHERE p.id = ? ";
-		System.out.println("Nombre de trajets trouvés : " + trajets.size());
-
+            String sql = "SELECT * FROM trips WHERE user_id = ? AND trip_type = 0 ORDER BY start_date ASC";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, userId);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        Trajet trajet = new Trajet();
-                        trajet.setId(rs.getInt("id"));
-                        trajet.setStartTown(rs.getString("startTown"));
-                        trajet.setStartAddress(rs.getString("startAddress"));
-                        trajet.setEndTown(rs.getString("endTown"));
-                        trajet.setEndAddress(rs.getString("endAddress"));
-                        trajet.setStartDate(rs.getTimestamp("startDate"));
-                        trajet.setPrice(rs.getBigDecimal("price"));
-                        trajet.setDescription(rs.getString("description"));
-			trajet.setStatut(rs.getString("statut"));
-			trajet.setTypeVehicule(rs.getString("typeVehicule"));
-			trajet.setUsername(rs.getString("username"));
-			trajet.setAvatar_url(rs.getString("avatar_url"));
-
-                        trajets.add(trajet);
-                    } System.out.println("Nombre de trajets trouvés : " + trajets.size());
-
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setStartTown(rs.getString("start_town"));
+                    trip.setEndTown(rs.getString("end_town"));
+                    trip.setStartDate(rs.getTimestamp("start_date").toLocalDateTime());
+                    trip.setNbPlaces(rs.getInt("nb_places"));
+                    trip.setPrice(rs.getBigDecimal("price"));
+                    passengerTrips.add(trip);
                 }
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            request.setAttribute("error", "Erreur lors de la récupération des trajets.");
         }
 
+        List<Trip> driverTrips = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection()) {
+            String sql = "SELECT * FROM trips WHERE user_id = ? AND trip_type = 1 ORDER BY start_date ASC";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, userId);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setStartTown(rs.getString("start_town"));
+                    trip.setEndTown(rs.getString("end_town"));
+                    trip.setStartDate(rs.getTimestamp("start_date").toLocalDateTime());
+                    trip.setNbPlaces(rs.getInt("nb_places"));
+                    trip.setPrice(rs.getBigDecimal("price"));
+                    driverTrips.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            request.setAttribute("error", "Erreur lors de la récupération des trajets.");
+        }
 
-	
-
-        request.setAttribute("trajets", trajets);
-        request.getRequestDispatcher("myTrips.jsp").forward(request, response);
+        request.setAttribute("passengerTrips", passengerTrips);
+        request.setAttribute("driverTrips", driverTrips);
+        request.getRequestDispatcher("/run/run-mytrips.jsp").forward(request, response);
     }
 }

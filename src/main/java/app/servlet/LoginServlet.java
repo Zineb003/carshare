@@ -23,14 +23,36 @@ import de.mkammerer.argon2.Argon2Factory;
 public class LoginServlet extends HttpServlet {
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+           
+            response.sendRedirect(request.getContextPath() + "/profile");
+            return;
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/run/run-login.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+           
+            response.sendRedirect(request.getContextPath() + "/profile");
+            return;
+        }
+
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
          if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Tous les champs sont obligatoires.");
-            request.getRequestDispatcher("run-login.jsp").forward(request, response);
+            doGet(request, response);
             return;
         }
 
@@ -50,27 +72,26 @@ public class LoginServlet extends HttpServlet {
             
                 if (argon2.verify(hashedPassword, password)) {
 
-                    HttpSession session = request.getSession();
+                    HttpSession session_create = request.getSession();
                     User user = new User(
                         rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("avatar_url"),
-                        rs.getTimestamp("createdAt")
+                        rs.getTimestamp("created_at")
                     );
 
-                    session.setAttribute("user", user);
+                    session_create.setAttribute("user", user);
 
                     response.sendRedirect(request.getContextPath() + "/profile");
                 } else {
                     request.setAttribute("error", "Adresse e-mail ou mot de passe incorrect.");
-                    request.getRequestDispatcher("run-login.jsp").forward(request, response);
+                    doGet(request, response);
                 }
             } else {
-                request.setAttribute("error", "Il existe déjà un compte avec cette adresse e-mail.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
-                dispatcher.forward(request, response);
+                request.setAttribute("error", "Indentifiants incorrects.");
+                doGet(request, response);
             }
 
             rs.close();
@@ -79,23 +100,7 @@ public class LoginServlet extends HttpServlet {
 
         } catch (Exception e) {
             request.setAttribute("error", "Erreur serveur : " + e.getMessage());
-            RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
-            dispatcher.forward(request, response);
+            doGet(request, response);
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        HttpSession session = request.getSession(false);
-        if (session != null && session.getAttribute("user") != null) {
-           
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/profile");
-            dispatcher.forward(request, response);
-            return;
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("run-login.jsp");
-        dispatcher.forward(request, response);
     }
 }
