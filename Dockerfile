@@ -3,6 +3,9 @@ FROM tomcat
 # Initialisation de tomcat
 RUN cp -R webapps.dist/* webapps/
 
+#copier le .war maven dasn Tomcat
+COPY target/carshare-app.war /usr/local/tomcat/webapps/carshare-app.war
+
 # Copie du driver JDBC
 COPY conf/mysql-connector-j-9.3.0.jar /usr/local/tomcat/lib/
 
