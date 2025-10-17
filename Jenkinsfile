@@ -3,7 +3,7 @@ pipeline{
     stages{
         stage('checkout'){
             steps{
-                git url: 'file:///opt/git-repos/carshare.git', branch: 'master'
+                git branch: 'main', 'https://github.com/Zineb003/carshare.git'
         }
         }
         stage('build maven'){
