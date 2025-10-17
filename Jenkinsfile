@@ -3,7 +3,9 @@ pipeline{
     stages{
         stage('checkout'){
             steps{
-                git branch: 'main', 'https://github.com/Zineb003/carshare.git'
+                git branch: 'main', 
+                url: 'https://github.com/Zineb003/carshare.git',
+                credentialsId: 'ca991401-8709-452e-98fe-f46aca9ed83c'
         }
         }
         stage('build maven'){
