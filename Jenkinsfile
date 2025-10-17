@@ -3,7 +3,7 @@ pipeline{
     stages{
         stage('checkout'){
             steps{
-                git branch: 'main', 'https://github.com/Zineb003/carshare.git'
+                git url: 'https://github.com/Zineb003/carshare.git', branch: 'main'
         }
         }
         stage('build'){
