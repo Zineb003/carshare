@@ -26,6 +26,21 @@ pipeline{
         }
 
     }
+        }
+    stage("Deploy to Preprod"){
+        steps{
+            sshagent(['7d5ca8e5-4b77-4f38-a5cf-271f5209f2bb']) { // Remplace par l’ID de ta clé SSH
+            sh '''
+                ssh -o StrictHostKeyChecking=no urca@10.11.19.83 "
+                    docker pull zineb417/carshare-tomcat:latest &&
+                    docker stop carshare-preprod || true &&
+                    docker rm carshare-preprod || true &&
+                    docker run -d --name carshare-preprod -p 8080:8080 zineb417/carshare-tomcat:latest
+                "
+            '''
+        }
 }
     }
 }
+    }
+
