@@ -56,7 +56,9 @@ pipeline{
                     else
                         cd carshare
                         git pull origin main
-                    fi  
+                    fi 
+                    cd carshare
+                    git pull origin main
                     /usr/bin/docker pull zineb417/carshare-app:latest
                     /usr/bin/docker-compose down
                     /usr/bin/docker-compose up -d
