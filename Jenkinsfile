@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment {
-        DOCKER_IMAGE = "zineb003/carshare-app:latest"
+        DOCKER_IMAGE = "zineb417/carshare-app:latest"
     }
     stages{
         stage('Clone Repository'){
