@@ -51,7 +51,7 @@ pipeline{
                     sh ''' 
                     ssh urca@10.11.19.83 "
                     cd /home/urca
-                    if [! -d carshare]; then
+                    if [ ! -d carshare ]; then
                         git clone https://github.com/Zineb003/carshare.git
                     else
                         cd carshare
