@@ -50,7 +50,7 @@ pipeline{
                 sshagent(['7d5ca8e5-4b77-4f38-a5cf-271f5209f2bb']){
                     sh ''' 
                     ssh urca@10.11.19.83 "
-                    docker pull $DOCKER_IMAGE
+                    docker pull zineb417/carshare-app:latest
                     docker compose down
                     docker compose up -d
                     "
