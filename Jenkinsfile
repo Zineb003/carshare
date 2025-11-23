@@ -38,7 +38,9 @@ pipeline {
                 sshagent(['7d5ca8e5-4b77-4f38-a5cf-271f5209f2bb']) {
                     sh """
                     ssh urca@10.11.19.83 '
-                        cd /home/urca/carshare || mkdir -p /home/urca/carshare
+                        cd /home/urca
+                        git clone -b main https://github.com/Zineb003/carshare.git carshare || cd carshare && git pull
+                        cd carshare
                         docker pull $DOCKER_IMAGE
                         docker-compose down
                         docker-compose up -d
