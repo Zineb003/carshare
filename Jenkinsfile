@@ -51,8 +51,8 @@ pipeline{
                     sh ''' 
                     ssh urca@10.11.19.83 "
                     /usr/bin/docker pull zineb417/carshare-app:latest
-                    /usr/bin/docker compose down
-                    /usr/bin/docker compose up -d
+                    /usr/bin/docker-compose down
+                    /usr/bin/docker-compose up -d
                     "
                     '''
                 }
