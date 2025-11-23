@@ -53,9 +53,6 @@ pipeline{
                     cd /home/urca
                     if [ ! -d carshare ]; then
                         git clone https://github.com/Zineb003/carshare.git
-                    else
-                        cd carshare
-                        git pull origin main
                     fi 
                     cd carshare
                     git pull origin main
