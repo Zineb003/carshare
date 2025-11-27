@@ -1,4 +1,4 @@
-FROM tomcat:11.0.14-jdk17
+FROM tomcat:11.0.14-jdk21
 
 # Supprimer les applications par défaut (optionnel)
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
