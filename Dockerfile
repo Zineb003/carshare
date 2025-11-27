@@ -4,7 +4,7 @@ FROM tomcat:11.0.14-jdk17
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Copier le WAR directement dans webapps
-COPY target/carshare-app.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/carshare-app.war /usr/local/tomcat/webapps/
 
 # Copier le driver JDBC
 COPY conf/mysql-connector-j-9.3.0.jar /usr/local/tomcat/lib/
