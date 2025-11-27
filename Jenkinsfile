@@ -39,9 +39,11 @@ pipeline {
                     sh """
                     ssh urca@10.11.19.83 '
                         cd /home/urca
-                        git clone -b main https://github.com/Zineb003/carshare.git carshare || cd carshare && git pull
+                        mkdir carshare
                         cd carshare
-                        docker pull $DOCKER_IMAGE
+                        # Récupérer uniquement le docker-compose.yml depuis GitHub
+                        wget -O docker-compose.yml https://raw.githubusercontent.com/Zineb003/carshare/main/docker-compose.yml
+                        docker-compose pull $DOCKER_IMAGE
                         docker-compose down
                         docker-compose up -d
                     '
