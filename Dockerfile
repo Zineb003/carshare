@@ -1,10 +1,10 @@
 FROM tomcat:11.0.14-jdk17
 
 # Supprimer les applications par défaut (optionnel)
-RUN rm -rf /usr/local/tomcat/webapps/*
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Copier le WAR directement dans webapps
-COPY target/carshare-app.war /usr/local/tomcat/webapps/
+COPY target/carshare-app.war /usr/local/tomcat/webapps/ROOT.war
 
 # Copier le driver JDBC
 COPY conf/mysql-connector-j-9.3.0.jar /usr/local/tomcat/lib/
