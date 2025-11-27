@@ -43,7 +43,7 @@ pipeline {
                         cd carshare
                         # Récupérer uniquement le docker-compose.yml depuis GitHub
                         wget -O docker-compose.yml https://raw.githubusercontent.com/Zineb003/carshare/main/docker-compose.yml
-                        docker-compose pull $DOCKER_IMAGE
+                        docker-compose pull tomcat
                         docker-compose down
                         docker-compose up -d
                     '
