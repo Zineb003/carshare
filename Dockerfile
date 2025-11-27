@@ -14,7 +14,7 @@ COPY conf/context.xml /usr/local/tomcat/conf/context.xml
 COPY conf/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 
 # Désactiver RemoteAddrValve dans manager/host-manager
-RUN sed -i 's/^\(.*RemoteAddrValve.*\)$/<!-- \1 -->/' \
-    /usr/local/tomcat/webapps/manager/META-INF/context.xml && \
-    sed -i 's/^\(.*RemoteAddrValve.*\)$/<!-- \1 -->/' \
-    /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
+#RUN sed -i 's/^\(.*RemoteAddrValve.*\)$/<!-- \1 -->/' \
+ #   /usr/local/tomcat/webapps/manager/META-INF/context.xml && \
+ #   sed -i 's/^\(.*RemoteAddrValve.*\)$/<!-- \1 -->/' \
+ #   /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
