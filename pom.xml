@@ -12,9 +12,9 @@
   <dependencies>
     <!-- Dépendance pour les tests unitaires -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
     <!-- Selenium pour tests fonctionnels -->
@@ -70,9 +70,9 @@
     <artifactId>maven-surefire-plugin</artifactId>
     <version>3.1.2</version>
     <configuration>
-        <suiteXmlFiles>
-            <suiteXmlFile>testng.xml</suiteXmlFile>
-        </suiteXmlFiles>
+        <includes>
+          <include>**/*Test.java</include>
+        </includes>
     </configuration>
 </plugin>
 
