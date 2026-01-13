@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "carshare:latest"
         PREPROD_CONTAINER = "carshare-preprod"
         PREPROD_HOST = "10.11.19.83"
+        PROD_HOST = "10.11.19.84"
     }
 
     stages {
