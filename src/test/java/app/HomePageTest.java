@@ -1,28 +1,28 @@
 package app.selenium;
 
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.*;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HomePageTest {
 
     WebDriver driver;
 
-    @BeforeClass
-    public void setUp() {
-        // Chemin vers le driver Chrome ou Gecko
-        System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver");
+    @BeforeEach
+    void setUp() {
         driver = new ChromeDriver();
     }
 
     @Test
-    public void testHomePageTitle() {
+    void testHomePageTitle() {
         driver.get("http://10.11.19.83:8080/carshare-app");
-        assert driver.getTitle().contains("Carshare") : "Titre incorrect!";
+        assertTrue(driver.getTitle().contains("Carshare"));
     }
 
-    @AfterClass
-    public void tearDown() {
-        if(driver != null) driver.quit();
+    @AfterEach
+    void tearDown() {
+        if (driver != null) driver.quit();
     }
 }
