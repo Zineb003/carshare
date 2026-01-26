@@ -41,6 +41,13 @@ pipeline {
                 }
             }
         }
+
+        stage ('Tests Fonctionnels Selenium'){
+            steps {
+                echo "Execution des tests fonctionnels sur la préprod ... "
+                sh 'mvn test'
+            }
+        }
     }
 }
 
