@@ -1,4 +1,3 @@
-
 package app.selenium;
 
 import org.junit.jupiter.api.*;
@@ -7,41 +6,59 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegisterPageTest {
 
     WebDriver driver;
+    WebDriverWait wait;
 
     @BeforeEach
     void setUp() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        options.addArguments("--headless=new"); // nouvelle API headless plus stable
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--window-size=1920,1080"); // important pour rendre les éléments visibles
 
         driver = new ChromeDriver(options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @Test
-    void testCreateAccount() throws InterruptedException {
+    void testCreateAccount() {
         driver.get("http://10.11.19.83:8080/carshare-app/register");
 
+        // Attendre que le champ username soit visible
+        WebElement usernameInput = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.id("username"))
+        );
+        WebElement emailInput = driver.findElement(By.id("email"));
+        WebElement passwordInput = driver.findElement(By.id("password"));
+        WebElement submitButton = driver.findElement(By.cssSelector("button[type='submit']"));
+
         // Remplissage du formulaire
-        driver.findElement(By.id("username")).sendKeys("zinebtest");
-        driver.findElement(By.id("email")).sendKeys("zineb@test.com");
-        driver.findElement(By.id("password")).sendKeys("Test1234!");
+        usernameInput.sendKeys("zinebtest");
+        emailInput.sendKeys("zineb@test.com");
+        passwordInput.sendKeys("Test1234!");
 
         // Cliquer sur le bouton S'inscrire
-        driver.findElement(By.cssSelector("button[type='submit']")).click();
+        submitButton.click();
 
-        // Attendre un peu que la page se recharge (ou utiliser WebDriverWait pour attendre un message)
-        Thread.sleep(2000);
+        // Attendre que le message de succès apparaisse
+        boolean successMessageVisible = wait.until(
+                ExpectedConditions.or(
+                        ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.bg-green-100"), "Votre compte a été créé"),
+                        ExpectedConditions.textToBePresentInElementLocated(By.cssSelector("div.bg-green-100"), "success")
+                )
+        );
 
-        // Vérification de la réussite via la présence d'un message success ou redirection
-        String bodyText = driver.getPageSource();
-        assertTrue(bodyText.contains("Votre compte a été créé") || bodyText.contains("success"), "Le compte n'a pas été créé !");
+        assertTrue(successMessageVisible, "Le compte n'a pas été créé !");
     }
 
     @AfterEach
